@@ -2,18 +2,26 @@ import React, { useContext, useState } from 'react';
 import { AppContext } from '../context/AppContext';
 
 const AllocationForm = (props) => {
+    const { dispatch,remaining, currency  } = useContext(AppContext);
 
-    const { dispatch,remaining  } = useContext(AppContext);
     const [name, setName] = useState('');
     const [cost, setCost] = useState('');
     const [action, setAction] = useState('');
 
     const submitEvent = () => {
-            if(cost > remaining) {
+
+        if(cost > 20000) {
+            alert("Bedget exceeding  £20000");
+            setCost("");
+            return;
+        }           
+        else if(cost > remaining) {
                 alert("The value cannot exceed remaining funds  £"+remaining);
                 setCost("");
                 return;
             }
+
+
         const expense = {
             name: name,
             cost: parseInt(cost),
@@ -34,6 +42,7 @@ const AllocationForm = (props) => {
     return (
         <div>
             <div className='row'>
+
             <div className="input-group mb-3" style={{ marginLeft: '2rem' }}>
                     <div className="input-group-prepend">
                 <label className="input-group-text" htmlFor="inputGroupSelect01">Department</label>
@@ -47,6 +56,7 @@ const AllocationForm = (props) => {
                 <option value="IT" name="it">IT</option>
                 <option value="Admin" name="admin">Admin</option>
                   </select>
+
                     <div className="input-group-prepend" style={{ marginLeft: '2rem' }}>
                 <label className="input-group-text" htmlFor="inputGroupSelect02">Allocation</label>
                   </div>
@@ -54,19 +64,24 @@ const AllocationForm = (props) => {
                         <option defaultValue value="Add" name="Add">Add</option>
                 <option value="Reduce" name="Reduce">Reduce</option>
                   </select>
+                    <span style={{ marginLeft: '2rem' , marginRight: "4px", size: 14}}>{currency}</span>
                     <input
                         required='required'
                         type='number'
                         id='cost'
                         value={cost}
-                        style={{ marginLeft: '2rem' , size: 10}}
+                        step="10"
+                        max="20000"
+                        style={{ size: 10}}
                         onChange={(event) => setCost(event.target.value)}>
                         </input>
+
                     <button className="btn btn-primary" onClick={submitEvent} style={{ marginLeft: '2rem' }}>
                         Save
                     </button>
                 </div>
                 </div>
+
         </div>
     );
 };
